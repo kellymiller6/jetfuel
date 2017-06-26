@@ -7,3 +7,15 @@ $('#button').on('click', () => {
     </section>
   `)
 })
+
+const createFolder = (string) => {
+  //fetch POST
+}
+
+const shrinkUrl = (url) => {
+  let urlValue = $('#url').val()
+}
+
+const createLink = (name, url) => {
+  //fetch POST
+}
