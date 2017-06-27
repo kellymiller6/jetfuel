@@ -1,13 +1,5 @@
 $('#button').on('click', () => {
-
-  // const value = shrinkUrl()
-  // console.log(value);
   createFolder()
-  // $('.display-area').append(`
-  //   <section>
-  //     <a href=${folder}>${folder}</a>
-  //   </section>
-  // `)
 })
 
 const createFolder = () => {
@@ -22,7 +14,8 @@ const createFolder = () => {
   })
   $('.display-area').append(`
     <section>
-      <a href=${folder}>${folder}</a>
+      <button onclick='getLinks()'>${folder}</button>
+      <div class="link-display"></div>
     </section>
   `)
 }
@@ -50,7 +43,16 @@ const createLink = (name, url) => {
         dataType: 'json',
         success: (response) => {console.log(response)}
   })
-  //fetch POST
+}
+
+const getLinks = () => {
+  $.get(`/api/links/two`).then((link) => {
+    $('.link-display').append(`
+      <section>
+        <a href=${link}>${link.title}</a>
+      </section>
+    `)
+  })
 }
 
 //// $.get('/api/folders/one').then((message) => {$('.display-area').append(`
