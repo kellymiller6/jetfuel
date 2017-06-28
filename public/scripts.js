@@ -1,20 +1,21 @@
 $('#button').on('click', () => {
   createFolder()
+  createLink()
 })
 
 const createFolder = () => {
-  const folder = $('#folder-name').val();
+  const folderTitle = $('#folder-name').val();
   $.ajax({
-        url: '/api/folders',
+        url: '/api/v1/folders',
         type: 'POST',
         contentType: 'application/json',
-        data: JSON.stringify({ folder: folder }),
+        data: JSON.stringify({ name: folderTitle }),
         dataType: 'json',
         success: (response) => {console.log(response)}
   })
   $('.display-area').append(`
     <section>
-      <button onclick='getLinks()'>${folder}</button>
+      <button onclick='getLinks()'>${folderTitle}</button>
       <div class="link-display"></div>
     </section>
   `)
