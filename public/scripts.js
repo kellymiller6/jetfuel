@@ -3,10 +3,12 @@ $(document).ready(() => {
 })
 
 $('#button').on('click', () => {
+  $('.display-area').empty()
   createFolder()
-  appendFolders()
+  // appendFolders()
 })
 
+//creates input fields when click displaylinks
 $('.display-area').on('click', '.folder-button', function() {
   const folderId = $(this).closest('.name').attr('id')
   $(this).siblings('.inputs').append(`
@@ -41,7 +43,7 @@ const createFolder = () => {
         contentType: 'application/json',
         data: JSON.stringify({ name: folder }),
         dataType: 'json',
-        success: (response) => {appendFolders(response)}
+        success: (response) => {receiveFolders(response)}
   })
 }
 
