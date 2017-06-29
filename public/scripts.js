@@ -5,18 +5,22 @@ $(document).ready(() => {
 $('#button').on('click', () => {
   $('.display-area').empty()
   createFolder()
-  // appendFolders()
 })
 
 //creates input fields when click displaylinks
 $('.display-area').on('click', '.folder-button', function() {
   const folderId = $(this).closest('.name').attr('id')
+  console.log('${folderId}'.children);
+  if($(`#${folderId}-url-title`).length < 1){
   $(this).siblings('.inputs').append(`
-    <input id="url-title" type="text" placeholder="enter url title">
-    <input id="url" type="text" placeholder="enter url">
-    <input id="link-submit-button" onclick="createLink(${folderId})" type="submit" value='Submit'>
+    <div id='${folderId}' class='link-inputs'>
+      <input id="${folderId}-url-title" type="text" placeholder="enter url title">
+      <input id="url" type="text" placeholder="enter url">
+      <input id="link-submit-button" onclick="createLink(${folderId})" type="submit" value='Submit'>
+    </div>
   `)
   receiveLinks(folderId, this)
+}
 })
 
 // $('.display-area').on('click', '#link-submit-button', function() {
@@ -58,7 +62,6 @@ const loopFolders = (folders) => {
 }
 
 const appendFolders = (folder) => {
-  console.log(folder);
   $('.display-area').append(`
     <div class='name', id=${folder.id}>${folder.name}
       <button
