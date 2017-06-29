@@ -7,26 +7,26 @@ $('#button').on('click', () => {
   createFolder()
 })
 
-//creates input fields when click displaylinks
 $('.display-area').on('click', '.folder-button', function() {
   const folderId = $(this).closest('.name').attr('id')
-  console.log('${folderId}'.children);
   if($(`#${folderId}-url-title`).length < 1){
   $(this).siblings('.inputs').append(`
     <div id='${folderId}' class='link-inputs'>
       <input id="${folderId}-url-title" type="text" placeholder="enter url title">
       <input id="url" type="text" placeholder="enter url">
-      <input id="link-submit-button" onclick="createLink(${folderId})" type="submit" value='Submit'>
+      <input id="link-submit-button" type="submit" value='Submit'>
     </div>
   `)
   receiveLinks(folderId, this)
-}
+  }
 })
 
-// $('.display-area').on('click', '#link-submit-button', function() {
-//   appendLinks(this, link)
-// })
-
+$('.display-area').on('click', '#link-submit-button', function() {
+  $('.link-display').empty()
+  const folderId = $(this).closest('.name').attr('id')
+  const element = $(this).parent().parent();
+  createLink(folderId, element)
+})
 
 const receiveLinks = (folderId, element) => {
   $.get(`/api/v1/folders/${folderId}/links`).then((links) => {
@@ -37,7 +37,6 @@ const receiveLinks = (folderId, element) => {
     })
   })
 }
-
 
 const createFolder = () => {
   const folder = $('#folder-name').val();
@@ -74,17 +73,19 @@ const appendFolders = (folder) => {
     `)
 }
 
-const createLink = (id) => {
-  const title = $('#url-title').val();
-  const url = $('#url').val();
+const createLink = (id, element) => {
   const folderId = id;
+  const title = $(`#${folderId}-url-title`).val();
+  const url = $('#url').val();
   $.ajax({
     url: '/api/v1/links',
     type: 'POST',
     contentType: 'application/json',
     data: JSON.stringify({ title: title, long_url: url, short_url: url, folders_id: folderId }),
     dataType: 'json',
-    success: (response) => {appendLinks(this, response)}
+    success: (response) => {
+      receiveLinks(folderId, element)
+    }
   })
 }
 
