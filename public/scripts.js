@@ -1,24 +1,18 @@
 $('#button').on('click', () => {
   createFolder()
-  createLink()
+  getFolders()
 })
 
 const createFolder = () => {
-  const folderTitle = $('#folder-name').val();
+  const folder = $('#folder-name').val();
   $.ajax({
         url: '/api/v1/folders',
         type: 'POST',
         contentType: 'application/json',
-        data: JSON.stringify({ name: folderTitle }),
+        data: JSON.stringify({ name: folder }),
         dataType: 'json',
         success: (response) => {console.log(response)}
   })
-  $('.display-area').append(`
-    <section>
-      <button onclick='getLinks()'>${folderTitle}</button>
-      <div class="link-display"></div>
-    </section>
-  `)
 }
 
 const shrinkUrl = () => {
@@ -46,19 +40,39 @@ const createLink = (name, url) => {
   })
 }
 
-const getLinks = () => {
-  $.get(`/api/links/two`).then((link) => {
-    $('.link-display').append(`
-      <section>
-        <a href=${link}>${link.title}</a>
-      </section>
-    `)
+const getFolders = () => {
+  $.get(`/api/v1/folders`).then((folders) => {
+      folders.forEach((folder) => {
+        $('.display-area').append(`
+          <div class='name', id=${folder.id}>
+            ${folder.name}
+            <button
+              class='folder-button'>
+              Display Links
+            </button>
+            <div class="link-display"></div>
+          </div>
+          `)
+      })
   })
 }
 
-//// $.get('/api/folders/one').then((message) => {$('.display-area').append(`
-//   <section>
-//     ${message.folder}
-//   </section>
-//   `)
-// })
+function appendLinks (location, link) {
+  const element = $(location).siblings('.link-display')
+  element.append(`
+    <div>
+      <a href=${link.long_url}>${link.title}</a>
+    </div>
+    `)
+}
+
+$('.display-area').on('click', '.folder-button', function() {
+  const folderId = $(this).closest('.name').attr('id')
+  $.get(`/api/v1/folders/${folderId}/links`).then((links) => {
+    links.forEach((link) => {
+      if(link.folders_id == folderId) {
+        appendLinks(this, link)
+      }
+    })
+  })
+})
