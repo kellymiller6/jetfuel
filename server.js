@@ -84,9 +84,9 @@ app.post('/api/v1/links', (request, response) => {
   console.log(request.body);
   const link = request.body;
 
-  for(let requiredParams of ['title', 'long_url', 'short_url']) {
+  for(let requiredParams of ['title', 'long_url', 'short_url', 'folders_id']) {
     if(!link[requiredParams]) {
-      return response.status(422).json({error: `Expected format: { title: <string>, long_url: <string>, short_url: <string> }.
+      return response.status(422).json({error: `Expected format: { title: <string>, long_url: <string>, short_url: <string>, folders_id: <integer> }.
           You are missing a ${requiredParams} property`})
     }
   }
