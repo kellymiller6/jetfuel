@@ -1,23 +1,43 @@
-$('#button').on('click', () => {
-  createFolder()
-  appendFolders()
+$(document).ready(() => {
+  receiveFolders()
 })
 
+$('#button').on('click', () => {
+  $('.display-area').empty()
+  createFolder()
+})
+
+//creates input fields when click displaylinks
 $('.display-area').on('click', '.folder-button', function() {
   const folderId = $(this).closest('.name').attr('id')
+  console.log('${folderId}'.children);
+  if($(`#${folderId}-url-title`).length < 1){
   $(this).siblings('.inputs').append(`
-    <input id="url-title" type="text" placeholder="enter url title">
-    <input id="url" type="text" placeholder="enter url">
-    <input id="button" onclick="createLink(${folderId})" type="submit" value='Submit'>
+    <div id='${folderId}' class='link-inputs'>
+      <input id="${folderId}-url-title" type="text" placeholder="enter url title">
+      <input id="url" type="text" placeholder="enter url">
+      <input id="link-submit-button" onclick="createLink(${folderId})" type="submit" value='Submit'>
+    </div>
   `)
+  receiveLinks(folderId, this)
+}
+})
+
+// $('.display-area').on('click', '#link-submit-button', function() {
+//   appendLinks(this, link)
+// })
+
+
+const receiveLinks = (folderId, element) => {
   $.get(`/api/v1/folders/${folderId}/links`).then((links) => {
     links.forEach((link) => {
       if(link.folders_id == folderId) {
-        appendLinks(this, link)
+        appendLinks(element, link)
       }
     })
   })
-})
+}
+
 
 const createFolder = () => {
   const folder = $('#folder-name').val();
@@ -26,26 +46,32 @@ const createFolder = () => {
         type: 'POST',
         contentType: 'application/json',
         data: JSON.stringify({ name: folder }),
-        dataType: 'json'
-
+        dataType: 'json',
+        success: (response) => {receiveFolders(response)}
   })
 }
 
-const appendFolders = () => {
-$.get(`/api/v1/folders`).then((folders) => {
-    folders.forEach((folder) => {
-      $('.display-area').append(`
-        <div class='name', id=${folder.id}>${folder.name}
-          <button
-            class='folder-button'>
-              Display Links
-          </button>
-          <div class='inputs'></div>
-          <div class="link-display"></div>
-          </div>
-        `)
-      })
-  })
+const receiveFolders = () => {
+  fetch('/api/v1/folders')
+    .then(response => response.json())
+    .then(data => loopFolders(data))
+}
+
+const loopFolders = (folders) => {
+  folders.map(folder => appendFolders(folder))
+}
+
+const appendFolders = (folder) => {
+  $('.display-area').append(`
+    <div class='name', id=${folder.id}>${folder.name}
+      <button
+        class='folder-button'>
+          Display Links
+      </button>
+      <div class='inputs'></div>
+      <div class="link-display"></div>
+      </div>
+    `)
 }
 
 const createLink = (id) => {
@@ -58,6 +84,7 @@ const createLink = (id) => {
     contentType: 'application/json',
     data: JSON.stringify({ title: title, long_url: url, short_url: url, folders_id: folderId }),
     dataType: 'json',
+    success: (response) => {appendLinks(this, response)}
   })
 }
 

@@ -73,7 +73,7 @@ app.post('/api/v1/folders', (request, response) => {
     }
   }
 
-  database('folders').insert(folder, 'id')
+  database('folders').insert(folder, 'id', 'name')
   .then((folder) => {
     response.status(201).json({id: folder[0]})
   })
