@@ -24,6 +24,10 @@ $('.display-area').on('click', '.folder-button', function() {
   }
 })
 
+// $('.sort-btn').on('click', function() {
+//   receiveLinks()
+// })
+
 $('.display-area').on('click', '#link-submit-button', function() {
   $('.link-display').empty()
   const folderId = $(this).closest('.name').attr('id')
@@ -34,7 +38,7 @@ $('.display-area').on('click', '#link-submit-button', function() {
 const receiveLinks = (folderId, element) => {
   $.get(`/api/v1/folders/${folderId}/links`).then((links) => {
     if(links.length){
-    links.forEach((link) => {
+    links.sort().forEach((link) => {
       if(link.folders_id == folderId) {
         appendLinks(element, link)
       }
@@ -112,7 +116,7 @@ const appendLinks = (location, link) => {
   element.append(`
     <div class='link-list'>
       <p>Title: ${link.title}</p>
-      <p>Clicks: ${link.clicks}</p>
+      <p class='clicks'>Clicks: ${link.clicks}</p>
       <a href=${link.short_url}>www.jetfuel.com/${link.short_url}</a>
       <p>Date Created: ${link.created_at}</p>
     </div>
