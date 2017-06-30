@@ -1,9 +1,9 @@
 let folderData = [{
   name: 'chipotle',
-  links: [{title: 'google', long_url: 'https://www.google.com', short_url:'https://www.google.com', clicks: 3}, {title: 'yahoo', long_url: 'https://www.yahoo.com', short_url:'https://www.yahoo.com', clicks: 1}]
+  links: [{id: 1, title: 'google', long_url: 'https://www.google.com', short_url:'https://www.google.com', clicks: 3}, {id: 2, title: 'yahoo', long_url: 'https://www.yahoo.com', short_url:'https://www.yahoo.com', clicks: 1}]
 }, {
   name: 'qDOBA',
-  links: [{title: 'espn', long_url: 'https://www.espn.com', short_url:'https://www.espn.com', clicks: 5}]
+  links: [{id: 3, title: 'espn', long_url: 'https://www.espn.com', short_url:'https://www.espn.com', clicks: 5}]
 }]
 
 const createFolder = (knex, folder) => {
