@@ -30,11 +30,17 @@ $('.display-area').on('click', '#link-submit-button', function() {
 
 const receiveLinks = (folderId, element) => {
   $.get(`/api/v1/folders/${folderId}/links`).then((links) => {
+    if(links.length){
     links.forEach((link) => {
       if(link.folders_id == folderId) {
         appendLinks(element, link)
       }
     })
+  }else{
+    $('.link-display').append(`
+      <p>Please enter a link title and url to shorten</p>
+    `)
+  }
   })
 }
 
@@ -53,7 +59,15 @@ const createFolder = () => {
 const receiveFolders = () => {
   fetch('/api/v1/folders')
     .then(response => response.json())
-    .then(data => loopFolders(data))
+    .then(data => {
+      if(data.length){
+        loopFolders(data)
+      }else{
+        $('.display-area').append(`
+        <p>Please enter a name for your folder</p>
+        `)
+      }
+    })
 }
 
 const loopFolders = (folders) => {
