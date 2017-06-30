@@ -97,7 +97,7 @@ const appendFolders = (folder) => {
 const createLink = (id, element) => {
   const folderId = id;
   const title = $(`#${folderId}-url-title`).val();
-  const url = checkHttp($('#url').val());
+  const url = $('#url').val();
   const shortUrl = shortenLink()
   $.ajax({
     url: '/api/v1/links',
@@ -133,12 +133,4 @@ const appendLinks = (location, link) => {
     }
 
     return text;
-  }
-
-  const checkHttp = (string) => {
-    if (string.substring(0, 7) != "http://") {
-      return string = "http://" + string;
-    } else {
-      return string;
-    }
   }
