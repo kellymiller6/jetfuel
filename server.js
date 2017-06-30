@@ -67,6 +67,7 @@ app.get('/:short_url', (request, response) => {
 
   database('links').where('short_url', request.params.short_url).select()
   .then(data => {
+    console.log(data);
     let link = data[0]
     clicks = link.clicks + 1
     url = link.long_url
