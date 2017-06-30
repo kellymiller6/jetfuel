@@ -32,4 +32,13 @@ describe('Client Routes', () => {
       done();
     });
   });
+
+  it('should return a 404 for a route that does not exist', (done) => {
+    chai.request(server)
+    .get('/404')
+    .end((err, response) => {
+      response.should.have.status(404);
+      done();
+    });
+  });
 });
