@@ -77,8 +77,7 @@ app.post('/api/v1/folders', (request, response) => {
 
   for(let requiredParams of ['name']) {
     if(!folder[requiredParams]) {
-      return response.status(422).json({error: `Expected format: { name: <string> }.
-          You are missing a ${requiredParams} property`})
+      return response.status(422).json({error: `Expected format: { name: <string> }. You are missing a ${requiredParams} property`})
     }
   }
 
@@ -94,8 +93,7 @@ app.post('/api/v1/links', (request, response) => {
 
   for(let requiredParams of ['title', 'long_url', 'short_url', 'folders_id']) {
     if(!link[requiredParams]) {
-      return response.status(422).json({error: `Expected format: { title: <string>, long_url: <string>, short_url: <string>, folders_id: <integer> }.
-          You are missing a ${requiredParams} property`})
+      return response.status(422).json({error: `Expected format: { title: <string>, long_url: <string>, short_url: <string>, folders_id: <integer> }. You are missing a ${requiredParams} property`})
     }
   }
 
