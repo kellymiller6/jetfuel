@@ -63,6 +63,17 @@ app.get('/api/v1/folders/:folders_id/links', (request, response) => {
   .catch( error => response.status(500).json({ error }))
 })
 
+app.get('/:short_url', (request, response) => {
+  database('links').where('short_url', request.params.short_url).select()
+  .then((link) => {
+    if(link.length) {
+      response.redirect(301, `${link[0].long_url}`)
+    } else {
+      response.status(404).json({error: `Nothing at ${request.params.short_url}`})
+    }
+  })
+})
+
 app.post('/api/v1/folders', (request, response) => {
   const folder = request.body;
 
@@ -81,7 +92,6 @@ app.post('/api/v1/folders', (request, response) => {
 })
 
 app.post('/api/v1/links', (request, response) => {
-  console.log(request.body);
   const link = request.body;
 
   for(let requiredParams of ['title', 'long_url', 'short_url', 'folders_id']) {
@@ -93,11 +103,11 @@ app.post('/api/v1/links', (request, response) => {
 
   database('links').insert(link, 'id')
   .then((link) => {
-    console.log(link);
     response.status(201).json({id: link[0]})
   })
   .catch(error => response.status(500).json({ error }))
 })
+
 
 
 app.listen(app.get('port'), () => {
