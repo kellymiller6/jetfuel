@@ -18,21 +18,23 @@ $('.display-area').on('click', '.folder-button', function() {
       <input id="${folderId}-url-title" type="text" placeholder="enter url title">
       <input id="url" type="text" placeholder="enter url">
       <input id="link-submit-button" type="submit" value='Submit'>
+      <input id="sort-btn" type="submit" value='Sort By Popularity'>
     </div>
   `)
   receiveLinks(folderId, this)
   }
 })
 
-// $('.sort-btn').on('click', function() {
-//   receiveLinks()
-// })
-
 $('.display-area').on('click', '#link-submit-button', function() {
   $('.link-display').empty()
   const folderId = $(this).closest('.name').attr('id')
   const element = $(this).parent().parent();
   createLink(folderId, element)
+})
+
+$('.display-area').on('click', '#sort-btn', function() {
+  const clicks = $(this).closest('.name').children('.link-display').children('.linlink-list').children('.clicks').html()
+  console.log(clicks);
 })
 
 const receiveLinks = (folderId, element) => {
