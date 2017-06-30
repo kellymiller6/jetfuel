@@ -76,12 +76,13 @@ const appendFolders = (folder) => {
 const createLink = (id, element) => {
   const folderId = id;
   const title = $(`#${folderId}-url-title`).val();
-  const url = $('#url').val();
+  const url = checkHttp($('#url').val());
+  const shortUrl = shortenLink()
   $.ajax({
     url: '/api/v1/links',
     type: 'POST',
     contentType: 'application/json',
-    data: JSON.stringify({ title: title, long_url: url, short_url: url, folders_id: folderId }),
+    data: JSON.stringify({ title: title, long_url: url, short_url: shortUrl, folders_id: folderId }),
     dataType: 'json',
     success: (response) => {
       receiveLinks(folderId, element)
@@ -93,25 +94,27 @@ const appendLinks = (location, link) => {
   const element = $(location).siblings('.link-display')
   element.append(`
     <div>
-      <a href=${link.long_url}>${link.title}</a>
+      <a href=${link.short_url}>${link.short_url}</a>
     </div>
     `)
   }
 
+  const shortenLink = () => {
+    const urlLength = 6;
+    const alpha = "abcdefghijklmnopqrstuvwxyz0123456789";
+    let text = "";
 
+    for (let i = 0; i < urlLength; i++) {
+      text += alpha[Math.floor(Math.random() * alpha.length)];
+    }
 
+    return text;
+  }
 
-
-
-// const shrinkUrl = () => {
-//   const urlValue = $('#url').val();
-//   const output = $.ajax({
-//         url: 'https://www.googleapis.com/urlshortener/v1/url?key=AIzaSyCiBZz-unuyj73d85Cu0mllPoe6-C7A28w',
-//         type: 'POST',
-//         contentType: 'application/json',
-//         data: JSON.stringify({ longUrl: urlValue }),
-//         dataType: 'json',
-//         success: (response) => {response.id}
-//   })
-//   return output.id
-// }
+  const checkHttp = (string) => {
+    if (string.substring(0, 7) != "http://") {
+      return string = "http://" + string;
+    } else {
+      return string;
+    }
+  }
