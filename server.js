@@ -64,13 +64,19 @@ app.get('/api/v1/folders/:folders_id/links', (request, response) => {
 })
 
 app.get('/:short_url', (request, response) => {
+  let clicks
+  let url
+
   database('links').where('short_url', request.params.short_url).select()
-  .then((link) => {
-    if(link.length) {
-      response.redirect(301, `${link[0].long_url}`)
-    } else {
-      response.status(404).json({error: `Nothing at ${request.params.short_url}`})
-    }
+  .then(data => {
+    let link = data[0]
+    clicks = link.clicks + 1
+    url = link.long_url
+  })
+  .then(() =>  {
+    database('links').where('short_url', request.params.short_url).update('clicks', clicks)
+    .then(()=> response.redirect(301, url))
+    .catch(error => response.status(404).json({error: `Nothing at ${request.params.short_url}`}))
   })
 })
 
@@ -96,7 +102,7 @@ app.post('/api/v1/links', (request, response) => {
 
   for(let requiredParams of ['title', 'long_url', 'short_url', 'folders_id']) {
     if(!link[requiredParams]) {
-      return response.status(422).json({error: `Expected format: { title: <string>, long_url: <string>, short_url: <string>, folders_id: <integer> }.
+      return response.status(422).json({error: `Expected format: { title: <string>, long_url: <string>, short_url: <string>, folders_id: <integer>}.
           You are missing a ${requiredParams} property`})
     }
   }

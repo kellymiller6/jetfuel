@@ -82,7 +82,7 @@ const createLink = (id, element) => {
     url: '/api/v1/links',
     type: 'POST',
     contentType: 'application/json',
-    data: JSON.stringify({ title: title, long_url: url, short_url: shortUrl, folders_id: folderId }),
+    data: JSON.stringify({ title: title, long_url: url, short_url: shortUrl, folders_id: folderId, clicks: 0 }),
     dataType: 'json',
     success: (response) => {
       receiveLinks(folderId, element)
@@ -94,6 +94,8 @@ const appendLinks = (location, link) => {
   const element = $(location).siblings('.link-display')
   element.append(`
     <div>
+      <p>${link.title}</p>
+      <h3>${link.clicks}</h3>
       <a href=${link.short_url}>${link.short_url}</a>
     </div>
     `)
