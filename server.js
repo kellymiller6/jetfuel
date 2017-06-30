@@ -1,11 +1,12 @@
 const express = require('express')
 const app = express()
 const bodyParser = require('body-parser')
-
+const cache = require('express-cache-ctrl');
 const database = require('./db/knex')
 
 app.use(express.static(`${__dirname}/public`))
 app.use(bodyParser.json())
+app.use('/', cache.disable());
 
 app.set('port', process.env.PORT || 3000)
 
@@ -61,7 +62,7 @@ app.get('/api/v1/folders/:folders_id/links', (request, response) => {
   .catch( error => response.status(500).json({ error }))
 })
 
-app.get('/:short_url', (request, response) => {
+app.get('/:short_url',  (request, response) => {
   let clicks
   let url
 
