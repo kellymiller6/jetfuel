@@ -2,7 +2,7 @@ body, .main, .name, .link-list, .link-inputs {
   display: flex;
   flex-direction: column;
   align-items: center;
-  background: #E5F3F2;
+  background: #7ec0ee;
   font-family: 'Open Sans', sans-serif;
 }
 
@@ -10,29 +10,39 @@ header {
   text-align: center;
 }
 
+img {
+  margin: 0 9px 0 5px;
+}
+
 h1 {
-  color: #00A79D;
+  color: #3f6077;
   font-family: 'Roboto Slab', serif;
 }
 
 h3 {
-  color: #045E55;
+  color: #19262f;
 }
 
 p{
   margin: 3px;
-  color: #045E55;
+  color: #19262f;
+}
+
+#folder-name {
+  padding: 2px 5px;
 }
 
 input[type=submit] {
+  padding: 5px 10px;
   border: none;
-  background: #045E55;
+  background: #19262f;
   color: #FFF;
   margin: 10px;
 }
 
 input[type=submit]:hover {
-  background: #66b2b2;
+  background: #6499be;
+  color: #19262f;
 }
 
 input {
@@ -40,12 +50,13 @@ input {
 }
 
 .folder-button {
+  margin-bottom: 10px;
   font-size: 1.5em;
-  background: #E5F3F2;
+  background: #7ec0ee;
   font-family: 'Open Sans', sans-serif;
   border: none;
-  border-bottom: 1px solid #045E55;
-  color: #045E55;
+  border-bottom: 1px solid #3f6077;
+  color: #19262f;
 }
 
 .folder-button:hover {

@@ -3,8 +3,10 @@ $(document).ready(() => {
 })
 
 $('#button').on('click', () => {
-  $('.display-area').empty()
-  createFolder()
+  if($('#folder-name').val()){
+    $('.display-area').empty()
+    createFolder()
+  }
 })
 
 $('.display-area').on('click', '.folder-button', function() {
@@ -39,7 +41,7 @@ const receiveLinks = (folderId, element) => {
     })
   }else{
     $('.link-display').append(`
-      <p>Please enter a link title and url to shorten</p>
+      <p></p>
     `)
   }
   })
@@ -112,6 +114,7 @@ const appendLinks = (location, link) => {
       <p>Title: ${link.title}</p>
       <p>Clicks: ${link.clicks}</p>
       <a href=${link.short_url}>www.jetfuel.com/${link.short_url}</a>
+      <p>Date Created: ${link.created_at}</p>
     </div>
     `)
   }
