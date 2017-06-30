@@ -1,4 +1,4 @@
-body, .main{
+body, .main, .name, .link-list, .link-inputs {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -6,7 +6,7 @@ body, .main{
   font-family: 'Open Sans', sans-serif;
 }
 
-header{
+header {
   text-align: center;
 }
 
@@ -15,15 +15,44 @@ h1 {
   font-family: 'Roboto Slab', serif;
 }
 
-h3{
+h3 {
   color: #045E55;
 }
+
+p{
+  margin: 3px;
+  color: #045E55;
+}
+
 input[type=submit] {
   border: none;
   background: #045E55;
   color: #FFF;
+  margin: 10px;
 }
 
-input{
+input[type=submit]:hover {
+  background: #66b2b2;
+}
+
+input {
   margin: 5px;
+}
+
+.folder-button {
+  font-size: 1.5em;
+  background: #E5F3F2;
+  font-family: 'Open Sans', sans-serif;
+  border: none;
+  border-bottom: 1px solid #045E55;
+  color: #045E55;
+}
+
+.folder-button:hover {
+  border-bottom: 1px solid #66b2b2;
+  color: #66b2b2;
+}
+
+.link-list {
+  margin-bottom: 20px;
 }

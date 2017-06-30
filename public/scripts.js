@@ -12,6 +12,7 @@ $('.display-area').on('click', '.folder-button', function() {
   if($(`#${folderId}-url-title`).length < 1){
   $(this).siblings('.inputs').append(`
     <div id='${folderId}' class='link-inputs'>
+      <p>Add Links:</p>
       <input id="${folderId}-url-title" type="text" placeholder="enter url title">
       <input id="url" type="text" placeholder="enter url">
       <input id="link-submit-button" type="submit" value='Submit'>
@@ -76,10 +77,10 @@ const loopFolders = (folders) => {
 
 const appendFolders = (folder) => {
   $('.display-area').append(`
-    <div class='name', id=${folder.id}>${folder.name}
+    <div class='name', id=${folder.id}>
       <button
         class='folder-button'>
-          Display Links
+          ${folder.name}
       </button>
       <div class='inputs'></div>
       <div class="link-display"></div>
@@ -107,10 +108,10 @@ const createLink = (id, element) => {
 const appendLinks = (location, link) => {
   const element = $(location).siblings('.link-display')
   element.append(`
-    <div>
-      <p>${link.title}</p>
-      <h3>${link.clicks}</h3>
-      <a href=${link.short_url}>${link.short_url}</a>
+    <div class='link-list'>
+      <p>Title: ${link.title}</p>
+      <p>Clicks: ${link.clicks}</p>
+      <a href=${link.short_url}>www.jetfuel.com/${link.short_url}</a>
     </div>
     `)
   }
