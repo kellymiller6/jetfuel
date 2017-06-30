@@ -1,15 +1,25 @@
-// Update with your config settings.
-
 module.exports = {
 
   development: {
-    client: 'pg', //client property - specify what client (type of db we are using)
+    client: 'pg',
     connection: 'postgres://localhost/jetfuel',
     migrations: {
       directory: './db/migrations'
     },
     seeds: {
      directory: './db/seeds/dev'
+    },
+    useNullAsDefault: true
+  },
+
+  test: {
+    client: 'pg',
+    connection: 'postgres://localhost/jetfuel_test',
+    migrations: {
+      directory: './db/migrations'
+    },
+    seeds: {
+      directory: './db/seeds/test'
     },
     useNullAsDefault: true
   }
