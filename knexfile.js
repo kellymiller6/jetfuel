@@ -12,6 +12,15 @@ module.exports = {
     useNullAsDefault: true
   },
 
+  production: {
+    client: 'pg',
+    connection: 'postgres://localhost/jetfuel',
+    migrations: {
+      directory: './db/migrations'
+    },
+    useNullAsDefault: true
+  },
+
   test: {
     client: 'pg',
     connection: 'postgres://localhost/jetfuel_test',
