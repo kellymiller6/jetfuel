@@ -2,9 +2,7 @@ const express = require('express')
 const app = express()
 const bodyParser = require('body-parser')
 
-const environment = process.env.NODE_ENV || 'development'
-const configuration = require('./knexfile')[environment]
-const database = require('knex')(configuration)
+const database = require('./db/knex')
 
 app.use(express.static(`${__dirname}/public`))
 app.use(bodyParser.json())
@@ -79,8 +77,7 @@ app.post('/api/v1/folders', (request, response) => {
 
   for(let requiredParams of ['name']) {
     if(!folder[requiredParams]) {
-      return response.status(422).json({error: `Expected format: { name: <string> }.
-          You are missing a ${requiredParams} property`})
+      return response.status(422).json({error: `Expected format: { name: <string> }. You are missing a ${requiredParams} property`})
     }
   }
 
@@ -96,8 +93,7 @@ app.post('/api/v1/links', (request, response) => {
 
   for(let requiredParams of ['title', 'long_url', 'short_url', 'folders_id']) {
     if(!link[requiredParams]) {
-      return response.status(422).json({error: `Expected format: { title: <string>, long_url: <string>, short_url: <string>, folders_id: <integer> }.
-          You are missing a ${requiredParams} property`})
+      return response.status(422).json({error: `Expected format: { title: <string>, long_url: <string>, short_url: <string>, folders_id: <integer> }. You are missing a ${requiredParams} property`})
     }
   }
 
@@ -108,8 +104,8 @@ app.post('/api/v1/links', (request, response) => {
   .catch(error => response.status(500).json({ error }))
 })
 
-
-
 app.listen(app.get('port'), () => {
   console.log(`${app.locals.title} is running on ${app.get('port')}.`)
 })
+
+module.exports = app
