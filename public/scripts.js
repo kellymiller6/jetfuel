@@ -108,17 +108,28 @@ const urlValidation = (url) => {
   `)
 }
 
+const checkHttp = (string) => {
+  if (!string.match(/^[a-zA-Z]+:\/\//)){
+      return string = 'https://' + string;
+      console.log(string);
+  } else {
+    return string
+  }
+}
+
 const createLink = (id, element) => {
   const folderId = id;
   const title = $(`#${folderId}-url-title`).val();
   const url = $('#url').val();
-  if(urlValidation(url)){
+  const checkedUrl = checkHttp(url)
+  if(urlValidation(checkedUrl)){
+    console.log('checked', checkedUrl);
     const shortUrl = shortenLink()
     $.ajax({
       url: '/api/v1/links',
       type: 'POST',
       contentType: 'application/json',
-      data: JSON.stringify({ title: title, long_url: url, short_url: shortUrl, folders_id: folderId, clicks: 0 }),
+      data: JSON.stringify({ title: title, long_url: checkedUrl, short_url: shortUrl, folders_id: folderId, clicks: 0 }),
       dataType: 'json',
       success: (response) => {
         receiveLinks(folderId, element)
