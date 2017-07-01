@@ -20,7 +20,7 @@ describe('Client Routes', () => {
     });
   });
 
-  it.skip('should return a 404 for a route that does not exist', (done) => {
+  it('should return a 404 for a route that does not exist', (done) => {
     chai.request(server)
     .get('/404')
     .end((err, response) => {
@@ -127,10 +127,10 @@ describe('API Routes', () => {
     });
   });
 
-  describe('GET /:short_url', () => {
+  describe('GET /click/:short_url', () => {
     it('should return a link ', (done) => {
       chai.request(server)
-      .get('/google')
+      .get('/click/google')
       .end((err, response) => {
         response.should.have.status(200);
         response.redirects.should.be.a('array');
@@ -140,9 +140,9 @@ describe('API Routes', () => {
       });
     });
 
-    it.skip('should not return a link ', (done) => {
+    it('should not return a link ', (done) => {
       chai.request(server)
-      .get('/keji')
+      .get('/click/keji')
       .end((err, response) => {
         response.should.have.status(404);
         response.should.be.json;
