@@ -15,6 +15,7 @@ $('.display-area').on('click', '.folder-button', function() {
   $(this).siblings('.inputs').append(`
     <div id='${folderId}' class='link-inputs'>
       <p>Add Links:</p>
+      <p class='error-mess'></p>
       <input id="${folderId}-url-title" type="text" placeholder="enter url title">
       <input id="url" type="text" placeholder="enter url">
       <input id="link-submit-button" type="submit" value='Submit'>
@@ -95,22 +96,35 @@ const appendFolders = (folder) => {
       </div>
     `)
 }
+const urlValidation = (url) => {
+  const exp = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/gi
+
+  const regex = new RegExp(exp)
+  if(url.match(regex)){
+    return true
+  }
+  $('.error-mess').append(`
+    <p>Please enter a valid URL starting with http:// or https://</p>
+  `)
+}
 
 const createLink = (id, element) => {
   const folderId = id;
   const title = $(`#${folderId}-url-title`).val();
   const url = $('#url').val();
-  const shortUrl = shortenLink()
-  $.ajax({
-    url: '/api/v1/links',
-    type: 'POST',
-    contentType: 'application/json',
-    data: JSON.stringify({ title: title, long_url: url, short_url: shortUrl, folders_id: folderId, clicks: 0 }),
-    dataType: 'json',
-    success: (response) => {
-      receiveLinks(folderId, element)
-    }
-  })
+  if(urlValidation(url)){
+    const shortUrl = shortenLink()
+    $.ajax({
+      url: '/api/v1/links',
+      type: 'POST',
+      contentType: 'application/json',
+      data: JSON.stringify({ title: title, long_url: url, short_url: shortUrl, folders_id: folderId, clicks: 0 }),
+      dataType: 'json',
+      success: (response) => {
+        receiveLinks(folderId, element)
+      }
+    })
+  }
 }
 
 const appendLinks = (location, link) => {
