@@ -50,18 +50,20 @@ const getLinkByFolderId = (request, response) => {
 
 const getShortUrl = (request, response) => {
   let clicks
-  let url
   database('links').where('short_url', request.params.short_url).select()
-  .then(data => {
-    let link = data[0]
+  .then((data) => {
+    const link = data[0]
     clicks = link.clicks + 1
-    url = link.long_url
+    response.redirect(301, link.long_url)
   })
   .then(() =>  {
     database('links').where('short_url', request.params.short_url).update('clicks', clicks)
-    .then(()=> response.redirect(301, url))
-    .catch(error => response.status(404).json({error: `Nothing at ${request.params.short_url}`}))
+    .then((number)=> {
+      response.status(204)
+    })
+    .catch(error => response.status(500).json({error}))
   })
+  .catch((error) => response.status(404).json({error: `Nothing at ${request.params.short_url}`}))
 }
 
 const createFolder = (request, response) => {

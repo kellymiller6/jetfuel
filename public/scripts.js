@@ -119,7 +119,7 @@ const appendLinks = (location, link) => {
     <div class='link-list'>
       <p>Title: ${link.title}</p>
       <p class='clicks'>Clicks: ${link.clicks}</p>
-      <a href=${link.short_url}>${link.short_url}</a>
+      <a href=/click/${link.short_url}>${link.short_url}</a>
       <p>Date Created: ${link.created_at}</p>
     </div>
     `)
