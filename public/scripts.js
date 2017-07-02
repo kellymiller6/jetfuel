@@ -33,26 +33,11 @@ $('.display-area').on('click', '#link-submit-button', function() {
   createLink(folderId, element)
 })
 
-$('.display-area').on('click', '#sort-btn', function() {
-  const clicks = $(this).closest('.name').children('.link-display').children('.linlink-list').children('.clicks').html()
-  console.log(clicks);
-})
+// $('.display-area').on('click', '#sort-btn', function() {
+//   const clicks = $(this).closest('.name').children('.link-display').children('.link-list').children('.clicks').html()
+//   console.log(clicks);
+// })
 
-const receiveLinks = (folderId, element) => {
-  $.get(`/api/v1/folders/${folderId}/links`).then((links) => {
-    if(links.length){
-    links.sort().forEach((link) => {
-      if(link.folders_id == folderId) {
-        appendLinks(element, link)
-      }
-    })
-  }else{
-    $('.link-display').append(`
-      <p></p>
-    `)
-  }
-  })
-}
 
 const createFolder = () => {
   const folder = $('#folder-name').val();
@@ -96,6 +81,7 @@ const appendFolders = (folder) => {
       </div>
     `)
 }
+
 const urlValidation = (url) => {
   const exp = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/gi
 
@@ -148,16 +134,61 @@ const appendLinks = (location, link) => {
       <p>Date Created: ${link.created_at}</p>
     </div>
     `)
+}
+
+const shortenLink = () => {
+  const urlLength = 6;
+  const alpha = "abcdefghijklmnopqrstuvwxyz0123456789";
+  let text = "";
+
+  for (let i = 0; i < urlLength; i++) {
+    text += alpha[Math.floor(Math.random() * alpha.length)];
   }
 
-  const shortenLink = () => {
-    const urlLength = 6;
-    const alpha = "abcdefghijklmnopqrstuvwxyz0123456789";
-    let text = "";
+  return text;
+}
 
-    for (let i = 0; i < urlLength; i++) {
-      text += alpha[Math.floor(Math.random() * alpha.length)];
-    }
+const compare = (a,b) => {
+  if (a.clicks < b.clicks)
+    return -1;
+  if (a.clicks > b.clicks)
+    return 1;
+  return 0;
+}
 
-    return text;
+$('.display-area').on('click', '#sort-btn', function() {
+  const folderId = $(this).closest('.name').attr('id')
+  const element = $(this).parents('.link-inputs').parents('.inputs');
+  $('.link-display').empty();
+
+  $.get(`/api/v1/folders/${folderId}/links`).then((links) => {
+    if(links.length){
+      const sortedLinks = links.sort(compare).reverse()
+      sortedLinks.forEach((link) => {
+        if(link.folders_id == folderId) {
+          appendLinks(element, link)
+        }
+      })
+    }else{
+      $('.link-display').append(`
+        <p>No links to sort.</p>
+        `)
+      }
+    })
+})
+
+const receiveLinks = (folderId, element) => {
+  $.get(`/api/v1/folders/${folderId}/links`).then((links) => {
+    if(links.length){
+      links.forEach((link) => {
+        if(link.folders_id == folderId) {
+          appendLinks(element, link)
+        }
+      })
+    }else{
+      $('.link-display').append(`
+        <p></p>
+        `)
+      }
+    })
   }
