@@ -14,6 +14,12 @@ header {
   border: solid 1px black;
   margin: 2% 10%;
   padding: 1%;
+  text-align: center;
+}
+
+.main-text {
+  text-align: center;
+  font-size: 20px;
 }
 
 img {
@@ -23,6 +29,7 @@ img {
 h1 {
   color: #3f6077;
   font-family: 'Roboto Slab', serif;
+  font-size: 3em;
 }
 
 h3 {
@@ -44,33 +51,65 @@ input[type=submit] {
   background: #19262f;
   color: #FFF;
   margin: 10px;
+  font-size: 20px;
+  border-radius: 10px;
 }
 
 input[type=submit]:hover {
-  background: #6499be;
+  background: #ffff00;
   color: #19262f;
+  font-size: 20px;
+  border-radius: 10px;
 }
 
 input {
   margin: 5px;
 }
 
-
 .folder-button {
   margin-bottom: 10px;
   font-size: 1.5em;
   background: #7ec0ee;
   font-family: 'Open Sans', sans-serif;
-  border: none;
-  border-bottom: 1px solid #3f6077;
-  color: #19262f;
+  border: 3px solid #3f6077;
+  color: #3f6077;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  max-width: 180px;
+  min-width: 180px;
+  border-radius: 10px;
 }
 
 .folder-button:hover {
-  border-bottom: 1px solid #66b2b2;
-  color: #66b2b2;
+  border: 3px solid #ffff00;
+  color: #ffff00;
+}
+
+.sort-btn-container {
+  margin-bottom: 30px
+}
+
+.sort-btn {
+  display: block;
 }
 
 .link-list {
-  margin-bottom: 20px;
+  margin-bottom: 30px;
+  border: 3px solid white;
+  border-radius: 10px;
+  background: #fff;
+}
+
+.link-text {
+  font-size: 20px;
+}
+
+
+
+
+@media screen and (max-width: 390px) {
+    .sort-btn {
+      display: block;
+      margin: 0 auto;
+    }
 }

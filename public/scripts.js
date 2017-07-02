@@ -11,21 +11,26 @@ $('#button').on('click', () => {
 
 $('.display-area').on('click', '.folder-button', function() {
   const folderId = $(this).closest('.name').attr('id')
-  if($(`#${folderId}-url-title`).length < 1){
-  $(this).siblings('.inputs').append(`
-    <div id='${folderId}' class='link-inputs'>
-      <p>Add Links:</p>
-      <p class='error-mess'></p>
-      <input id="${folderId}-url-title" type="text" placeholder="enter url title">
-      <input id="url" type="text" placeholder="enter url">
-      <input id="link-submit-button" type="submit" value='Submit'>
-      <div class='sort-btn-container'>
-        <input class='sort-btn' id="sort-most-pop" type="submit" value='Sort By Most Popular'>
-        <input class='sort-btn' id="sort-least-pop" type="submit" value='Sort By Least Popular'>
+  $(this).data('clicked', true)
+
+  if($(`#${folderId}-url-title`).length < 1) {
+    $(this).siblings('.inputs').append(`
+      <div id='${folderId}' class='link-inputs'>
+        <p class='link-text'>Add Links:</p>
+        <p class='error-mess'></p>
+        <input id="${folderId}-url-title" type="text" placeholder="enter url title">
+        <input id="url" type="text" placeholder="enter url">
+        <input id="link-submit-button" type="submit" value='Submit'>
+        <div class='sort-btn-container'>
+          <input class='sort-btn' id="sort-most-pop" type="submit" value='Sort By Most Popular'>
+          <input class='sort-btn' id="sort-least-pop" type="submit" value='Sort By Least Popular'>
+        </div>
       </div>
-    </div>
-  `)
+    `)
   receiveLinks(folderId, this)
+  } else {
+    $(this).siblings('.inputs').toggle()
+    $(this).siblings('.link-display').toggle()
   }
 })
 
@@ -72,14 +77,6 @@ $('.display-area').on('click', '#sort-least-pop', function() {
   })
 })
 
-const compareClicks = (a,b) => {
-  if (a.clicks < b.clicks)
-    return -1;
-  if (a.clicks > b.clicks)
-    return 1;
-  return 0;
-}
-
 const createFolder = () => {
   const folder = $('#folder-name').val();
   $.ajax({
@@ -123,34 +120,12 @@ const appendFolders = (folder) => {
     `)
 }
 
-const urlValidation = (url) => {
-  const exp = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/gi
-
-  const regex = new RegExp(exp)
-  if(url.match(regex)){
-    return true
-  }
-  $('.error-mess').append(`
-    <p>Please enter a valid URL starting with http:// or https://</p>
-  `)
-}
-
-const checkHttp = (string) => {
-  if (!string.match(/^[a-zA-Z]+:\/\//)){
-      return string = 'https://' + string;
-      console.log(string);
-  } else {
-    return string
-  }
-}
-
 const createLink = (id, element) => {
   const folderId = id;
   const title = $(`#${folderId}-url-title`).val();
   const url = $('#url').val();
   const checkedUrl = checkHttp(url)
   if(urlValidation(checkedUrl)){
-    console.log('checked', checkedUrl);
     const shortUrl = shortenLink()
     $.ajax({
       url: '/api/v1/links',
@@ -165,16 +140,25 @@ const createLink = (id, element) => {
   }
 }
 
-const appendLinks = (location, link) => {
-  const element = $(location).siblings('.link-display')
-  element.append(`
-    <div class='link-list'>
-      <p>Title: ${link.title}</p>
-      <p class='clicks'>Clicks: ${link.clicks}</p>
-      <a href=/click/${link.short_url}>${link.short_url}</a>
-      <p>Date Created: ${link.created_at}</p>
-    </div>
-    `)
+const checkHttp = (string) => {
+  if (!string.match(/^[a-zA-Z]+:\/\//)){
+      return string = 'https://' + string;
+  } else {
+    return string
+  }
+}
+
+const urlValidation = (url) => {
+  const exp = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/gi
+
+  const regex = new RegExp(exp)
+  if(url.match(regex)){
+    $('.error-mess').remove()
+    return true
+  }
+  $('.error-mess').append(`
+    <p>Please enter a valid URL starting with http:// or https://</p>
+  `)
 }
 
 const shortenLink = () => {
@@ -188,6 +172,20 @@ const shortenLink = () => {
 
   return text;
 }
+
+const appendLinks = (location, link) => {
+  const element = $(location).siblings('.link-display')
+
+  element.append(`
+    <div class='link-list'>
+      <p class='link-text'>Title: ${link.title}</p>
+      <p class='link-text clicks'>Clicks: ${link.clicks}</p>
+      <a class='link-text' href=/click/${link.short_url}>${link.short_url}</a>
+      <p class="link-text">Date Created: ${new Date(link.created_at).toLocaleString()}</p>
+    </div>
+    `)
+}
+
 
 const receiveLinks = (folderId, element) => {
   $.get(`/api/v1/folders/${folderId}/links`).then((links) => {
@@ -211,4 +209,12 @@ const loopLinks = (links, folderId, element) => {
         `<p>No links to display</p>`)
     }
   })
+}
+
+const compareClicks = (a,b) => {
+  if (a.clicks < b.clicks)
+    return -1;
+  if (a.clicks > b.clicks)
+    return 1;
+  return 0;
 }
