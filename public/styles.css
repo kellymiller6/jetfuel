@@ -10,6 +10,12 @@ header {
   text-align: center;
 }
 
+.intro {
+  border: solid 1px black;
+  margin: 2% 10%;
+  padding: 1%;
+}
+
 img {
   margin: 0 9px 0 5px;
 }
