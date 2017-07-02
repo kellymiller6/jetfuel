@@ -19,7 +19,10 @@ $('.display-area').on('click', '.folder-button', function() {
       <input id="${folderId}-url-title" type="text" placeholder="enter url title">
       <input id="url" type="text" placeholder="enter url">
       <input id="link-submit-button" type="submit" value='Submit'>
-      <input id="sort-btn" type="submit" value='Sort By Popularity'>
+      <div class='sort-btn-container'>
+        <input class='sort-btn' id="sort-most-pop" type="submit" value='Sort By Most Popular'>
+        <input class='sort-btn' id="sort-least-pop" type="submit" value='Sort By Least Popular'>
+      </div>
     </div>
   `)
   receiveLinks(folderId, this)
@@ -33,11 +36,49 @@ $('.display-area').on('click', '#link-submit-button', function() {
   createLink(folderId, element)
 })
 
-// $('.display-area').on('click', '#sort-btn', function() {
-//   const clicks = $(this).closest('.name').children('.link-display').children('.link-list').children('.clicks').html()
-//   console.log(clicks);
-// })
+$('.display-area').on('click', '#sort-most-pop', function() {
+  const folderId = $(this).closest('.name').attr('id')
+  const element = $(this).parents('.link-inputs').parents('.inputs');
+  $('.link-display').empty();
 
+  $.get(`/api/v1/folders/${folderId}/links`).then((links) => {
+    if(links.length){
+      const sortedLinks = links.sort(compareClicks).reverse()
+      loopLinks(sortedLinks, folderId, element)
+    } else{
+      const message = $(this).parents('.sort-btn-container').parents('.inputs').siblings('.link-display');
+      message.append(
+        `<p>No links to sort.</p>`
+      )
+    }
+  })
+})
+
+$('.display-area').on('click', '#sort-least-pop', function() {
+  const folderId = $(this).closest('.name').attr('id')
+  const element = $(this).parents('.link-inputs').parents('.inputs');
+  $('.link-display').empty();
+
+  $.get(`/api/v1/folders/${folderId}/links`).then((links) => {
+    if(links.length){
+      const sortedLinks = links.sort(compareClicks)
+      loopLinks(sortedLinks, folderId, element)
+    } else{
+      const message = $(this).parents('.sort-btn-container').parents('.inputs').siblings('.link-display');
+      message.append(
+        `<p>No links to sort.</p>`
+      )
+    }
+  })
+})
+
+const compareClicks = (a,b) => {
+  if (a.clicks < b.clicks)
+    return -1;
+  if (a.clicks > b.clicks)
+    return 1;
+  return 0;
+}
 
 const createFolder = () => {
   const folder = $('#folder-name').val();
@@ -148,47 +189,26 @@ const shortenLink = () => {
   return text;
 }
 
-const compare = (a,b) => {
-  if (a.clicks < b.clicks)
-    return -1;
-  if (a.clicks > b.clicks)
-    return 1;
-  return 0;
-}
-
-$('.display-area').on('click', '#sort-btn', function() {
-  const folderId = $(this).closest('.name').attr('id')
-  const element = $(this).parents('.link-inputs').parents('.inputs');
-  $('.link-display').empty();
-
-  $.get(`/api/v1/folders/${folderId}/links`).then((links) => {
-    if(links.length){
-      const sortedLinks = links.sort(compare).reverse()
-      sortedLinks.forEach((link) => {
-        if(link.folders_id == folderId) {
-          appendLinks(element, link)
-        }
-      })
-    }else{
-      $('.link-display').append(`
-        <p>No links to sort.</p>
-        `)
-      }
-    })
-})
-
 const receiveLinks = (folderId, element) => {
   $.get(`/api/v1/folders/${folderId}/links`).then((links) => {
     if(links.length){
-      links.forEach((link) => {
-        if(link.folders_id == folderId) {
-          appendLinks(element, link)
-        }
-      })
+      loopLinks(links, folderId, element)
     }else{
       $('.link-display').append(`
         <p></p>
         `)
-      }
-    })
-  }
+    }
+  })
+}
+
+const loopLinks = (links, folderId, element) => {
+  links.forEach((link) => {
+    if(link.folders_id == folderId) {
+      appendLinks(element, link)
+    } else {
+      const loc = $(element).siblings('.link-display')
+      loc.append(
+        `<p>No links to display</p>`)
+    }
+  })
+}
