@@ -1,5 +1,5 @@
 $(document).ready(() => {
-  getFolder()
+  receiveFolders()
 })
 
 $('#button').on('click', () => {
@@ -69,11 +69,11 @@ const createFolder = () => {
         contentType: 'application/json',
         data: JSON.stringify({ name: folder }),
         dataType: 'json',
-        success: (response) => {getFolder(response)}
+        success: (response) => {receiveFolders(response)}
   })
 }
 
-const getFolder = () => {
+const receiveFolders = () => {
   fetch('/api/v1/folders')
     .then(response => response.json())
     .then(data => {
@@ -118,7 +118,7 @@ const createLink = (id, element) => {
       data: JSON.stringify({ title: title, long_url: checkedUrl, short_url: shortUrl, folders_id: folderId, clicks: 0 }),
       dataType: 'json',
       success: (response) => {
-        receiveLinks(folderId, element)
+        getLinks(folderId, element)
       }
     })
   }
@@ -171,7 +171,7 @@ const appendLinks = (location, link) => {
 }
 
 
-const receiveLinks = (folderId, element) => {
+const getLinks = (folderId, element) => {
   $.get(`/api/v1/folders/${folderId}/links`).then((links) => {
     if(links.length){
       loopLinks(links, folderId, element)
@@ -201,32 +201,4 @@ const compareClicks = (a,b) => {
   if (a.clicks > b.clicks)
     return 1;
   return 0;
-}
-
-const sortByTheMost = (folderId, element) => {
-  $.get(`/api/v1/folders/${folderId}/links`).then((links) => {
-    if(links.length){
-      const sortedLinks = links.sort(compareClicks).reverse()
-      loopLinks(sortedLinks, folderId, element)
-    } else{
-      const message = $(this).parents('.sort-btn-container').parents('.inputs').siblings('.link-display');
-      message.append(
-        `<p>No links to sort.</p>`
-      )
-    }
-  })
-}
-
-const sortByTheLeast = (folderId, element) => {
-  $.get(`/api/v1/folders/${folderId}/links`).then((links) => {
-    if(links.length){
-      const sortedLinks = links.sort(compareClicks)
-      loopLinks(sortedLinks, folderId, element)
-    } else{
-      const message = $(this).parents('.sort-btn-container').parents('.inputs').siblings('.link-display');
-      message.append(
-        `<p>No links to sort.</p>`
-      )
-    }
-  })
 }
