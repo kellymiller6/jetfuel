@@ -10,28 +10,8 @@ $('#button').on('click', () => {
 })
 
 $('.display-area').on('click', '.folder-button', function() {
-  const folderId = $(this).closest('.name').attr('id')
-  $(this).data('clicked', true)
-
-  if($(`#${folderId}-url-title`).length < 1) {
-    $(this).siblings('.inputs').append(`
-      <div id='${folderId}' class='link-inputs'>
-        <p class='link-text'>Add Links:</p>
-        <p class='error-mess'></p>
-        <input id="${folderId}-url-title" type="text" placeholder="enter url title">
-        <input id="url" type="text" placeholder="enter url">
-        <input id="link-submit-button" type="submit" value='Submit'>
-        <div class='sort-btn-container'>
-          <input class='sort-btn' id="sort-most-pop" type="submit" value='Sort By Most Popular'>
-          <input class='sort-btn' id="sort-least-pop" type="submit" value='Sort By Least Popular'>
-        </div>
-      </div>
-    `)
-  receiveLinks(folderId, this)
-  } else {
-    $(this).siblings('.inputs').toggle()
-    $(this).siblings('.link-display').toggle()
-  }
+  const element = this;
+  displayFolderContents(element)
 })
 
 $('.display-area').on('click', '#link-submit-button', function() {
@@ -46,17 +26,7 @@ $('.display-area').on('click', '#sort-most-pop', function() {
   const element = $(this).parents('.link-inputs').parents('.inputs');
   $('.link-display').empty();
 
-  $.get(`/api/v1/folders/${folderId}/links`).then((links) => {
-    if(links.length){
-      const sortedLinks = links.sort(compareClicks).reverse()
-      loopLinks(sortedLinks, folderId, element)
-    } else{
-      const message = $(this).parents('.sort-btn-container').parents('.inputs').siblings('.link-display');
-      message.append(
-        `<p>No links to sort.</p>`
-      )
-    }
-  })
+  sortByTheMost(folderId, element)
 })
 
 $('.display-area').on('click', '#sort-least-pop', function() {
@@ -64,18 +34,32 @@ $('.display-area').on('click', '#sort-least-pop', function() {
   const element = $(this).parents('.link-inputs').parents('.inputs');
   $('.link-display').empty();
 
-  $.get(`/api/v1/folders/${folderId}/links`).then((links) => {
-    if(links.length){
-      const sortedLinks = links.sort(compareClicks)
-      loopLinks(sortedLinks, folderId, element)
-    } else{
-      const message = $(this).parents('.sort-btn-container').parents('.inputs').siblings('.link-display');
-      message.append(
-        `<p>No links to sort.</p>`
-      )
-    }
-  })
+  sortByTheLeast(folderId, element)
 })
+
+const displayFolderContents = (element) => {
+  const folderId = $(element).closest('.name').attr('id')
+
+  if($(`#${folderId}-url-title`).length < 1) {
+    $(element).siblings('.inputs').append(`
+      <div id='${folderId}' class='link-inputs'>
+        <p class='link-text'>Add Links:</p>
+        <p class='error-mess'></p>
+        <input id="${folderId}-url-title" type="text" placeholder="enter url title">
+        <input id="url" type="text" placeholder="enter url">
+        <input id="link-submit-button" type="submit" value='Submit'>
+        <div class='sort-btn-container'>
+          <input class='sort-btn' id="sort-most-pop" type="submit" value='Sort By Most Popular'>
+          <input class='sort-btn' id="sort-least-pop" type="submit" value='Sort By Least Popular'>
+        </div>
+      </div>
+    `)
+  getLinks(folderId, element)
+  } else {
+    $(element).siblings('.inputs').toggle()
+    $(element).siblings('.link-display').toggle()
+  }
+}
 
 const createFolder = () => {
   const folder = $('#folder-name').val();
@@ -134,7 +118,7 @@ const createLink = (id, element) => {
       data: JSON.stringify({ title: title, long_url: checkedUrl, short_url: shortUrl, folders_id: folderId, clicks: 0 }),
       dataType: 'json',
       success: (response) => {
-        receiveLinks(folderId, element)
+        getLinks(folderId, element)
       }
     })
   }
@@ -187,7 +171,7 @@ const appendLinks = (location, link) => {
 }
 
 
-const receiveLinks = (folderId, element) => {
+const getLinks = (folderId, element) => {
   $.get(`/api/v1/folders/${folderId}/links`).then((links) => {
     if(links.length){
       loopLinks(links, folderId, element)
