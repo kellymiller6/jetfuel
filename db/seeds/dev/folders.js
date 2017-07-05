@@ -4,7 +4,7 @@ let folderData = [{
 }, {
   name: 'qDOBA',
   links: [{id: 3, title: 'espn', long_url: 'https://www.espn.com', short_url:'espn', clicks: 5}]
-}]
+}];
 
 const createFolder = (knex, folder) => {
   return knex('folders').insert({
@@ -22,10 +22,10 @@ const createFolder = (knex, folder) => {
           clicks: link.clicks,
           folders_id: folderId[0]
         })
-      )
+      );
     });
     return Promise.all(linksPromises);
-  })
+  });
 };
 
 const createLinks = (knex, link) => {
@@ -45,5 +45,5 @@ exports.seed = function(knex, Promise) {
       // Inserts seed entries
       return Promise.all(folderPromises);
     })
-    .catch(error => console.log(`Error seeding data: ${error}`))
+    .catch(error => console.log(`Error seeding data: ${error}`));
 };

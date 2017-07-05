@@ -1,4 +1,4 @@
-process.env.NODE_ENV = 'test'
+process.env.NODE_ENV = 'test';
 
 const chai = require('chai');
 const should = chai.should();
@@ -40,7 +40,7 @@ describe('API Routes', () => {
         knex.seed.run()
         .then(() => {
           done();
-        })
+        });
       });
     });
   });
@@ -93,8 +93,8 @@ describe('API Routes', () => {
         response.should.have.status(404);
         response.should.be.json;
         response.body.should.be.a('object');
-        response.body.should.have.property('error')
-        response.body.error.should.equal(`Could not find folder with id of 500`)
+        response.body.should.have.property('error');
+        response.body.error.should.equal(`Could not find folder with id of 500`);
         done();
       });
     });
@@ -120,8 +120,8 @@ describe('API Routes', () => {
         response.should.have.status(200);
         response.should.be.json;
         response.body.should.be.a('object');
-        response.body.should.have.property('note')
-        response.body.note.should.equal('No links exist')
+        response.body.should.have.property('note');
+        response.body.note.should.equal('No links exist');
         done();
       });
     });
@@ -135,7 +135,7 @@ describe('API Routes', () => {
         response.should.have.status(200);
         response.redirects.should.be.a('array');
         response.redirects.length.should.equal(1);
-        response.redirects.should.deep.equal(['https://www.google.com/'])
+        response.redirects.should.deep.equal(['https://www.google.com/']);
         done();
       });
     });
@@ -148,7 +148,7 @@ describe('API Routes', () => {
         response.should.be.json;
         response.body.should.be.a('object');
         response.body.should.have.property('error');
-        response.body.error.should.equal('Nothing at keji')
+        response.body.error.should.equal('Nothing at keji');
         done();
       });
     });
