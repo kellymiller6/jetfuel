@@ -202,3 +202,31 @@ const compareClicks = (a,b) => {
     return 1;
   return 0;
 }
+
+const sortByTheMost = (folderId, element) => {
+  $.get(`/api/v1/folders/${folderId}/links`).then((links) => {
+    if(links.length){
+      const sortedLinks = links.sort(compareClicks).reverse();
+      loopLinks(sortedLinks, folderId, element);
+    } else{
+      const message = $(this).parents('.sort-btn-container').parents('.inputs').siblings('.link-display');
+      message.append(
+        `<p>No links to sort.</p>`
+      );
+    }
+  });
+};
+
+const sortByTheLeast = (folderId, element) => {
+  $.get(`/api/v1/folders/${folderId}/links`).then((links) => {
+    if(links.length){
+      const sortedLinks = links.sort(compareClicks);
+      loopLinks(sortedLinks, folderId, element);
+    } else{
+      const message = $(this).parents('.sort-btn-container').parents('.inputs').siblings('.link-display');
+      message.append(
+        `<p>No links to sort.</p>`
+      );
+    }
+  });
+};
