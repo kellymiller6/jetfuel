@@ -8,7 +8,8 @@ machine:
     DATABASE_URL: postgresql://ubuntu:@127.0.0.1:5432/circle_test
 
 deployment:
-  staging:
-    branch: staging
+  production:
+    branch: master
     heroku:
-      appname: jetfuel-stagin
+      appname: fathomless-hamlet-87357
+
