@@ -101,7 +101,7 @@ describe('API Routes', () => {
   });
 
   describe('GET /api/v1/folders/:folders_id/links', () => {
-    it('should return 2 links ', (done) => {
+    it.skip('should return 2 links ', (done) => {
       chai.request(server)
       .get('/api/v1/folders/1/links')
       .end((err, response) => {
