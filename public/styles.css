@@ -2,7 +2,7 @@ body, .main, .name, .link-list, .link-inputs {
   display: flex;
   flex-direction: column;
   align-items: center;
-  background: #7ec0ee;
+  background: green;
   font-family: 'Open Sans', sans-serif;
 }
 
