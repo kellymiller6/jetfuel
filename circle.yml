@@ -9,6 +9,6 @@ machine:
 
 deployment:
   staging:
-    branch: master
+    branch: staging
     heroku:
       appname: jetfuel-stagin
