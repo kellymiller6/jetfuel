@@ -166,7 +166,6 @@ const compareClicks = (a,b) => {
   return 0;
 };
 
-
 const sortByTheMost = (folderId, element) => {
   $.get(`/api/v1/folders/${folderId}/links`).then((links) => {
     if(links.length){
@@ -245,3 +244,4 @@ if ('serviceWorker' in navigator) {
       });
   });
 }
+
