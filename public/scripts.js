@@ -1,84 +1,40 @@
-$(document).ready(() => {
-  receiveFolders()
-})
+const receiveFolders = () => {
+  fetch('/api/v1/folders')
+  .then(response => response.json())
+  .then(data => {
+    if(data.length){
+      loopFolders(data);
+    }else{
+      $('.display-area').append(`
+        <p>Please enter a name for your folder</p>
+        `);
+      }
+    });
+  };
 
-$('#button').on('click', () => {
-  if($('#folder-name').val()){
-    $('.display-area').empty()
-    createFolder()
-  }
-})
+const displayFolderContents = (element) => {
+  const folderId = $(element).closest('.name').attr('id');
 
-$('.display-area').on('click', '.folder-button', function() {
-  const folderId = $(this).closest('.name').attr('id')
-  if($(`#${folderId}-url-title`).length < 1){
-  $(this).siblings('.inputs').append(`
-    <div id='${folderId}' class='link-inputs'>
-      <p>Add Links:</p>
-      <p class='error-mess'></p>
-      <input id="${folderId}-url-title" type="text" placeholder="enter url title">
-      <input id="url" type="text" placeholder="enter url">
-      <input id="link-submit-button" type="submit" value='Submit'>
-      <div class='sort-btn-container'>
-        <input class='sort-btn' id="sort-most-pop" type="submit" value='Sort By Most Popular'>
-        <input class='sort-btn' id="sort-least-pop" type="submit" value='Sort By Least Popular'>
+  if($(`#${folderId}-url-title`).length < 1) {
+    $(element).siblings('.inputs').append(`
+      <div id='${folderId}' class='link-inputs'>
+        <p class='link-text'>Add Links:</p>
+        <p class='error-mess'></p>
+        <input id="${folderId}-url-title" type="text" placeholder="enter url title">
+        <input id="url" type="text" placeholder="enter url">
+        <input id="link-submit-button" type="submit" value='Submit'>
+        <div class='sort-btn-container'>
+          <input class='sort-btn' id="sort-most-pop" type="submit" value='Sort By Most Popular'>
+          <input class='sort-btn' id="sort-least-pop" type="submit" value='Sort By Least Popular'>
+        </div>
       </div>
-    </div>
-  `)
-  receiveLinks(folderId, this)
+    `);
+  getLinks(folderId, element);
+  } else {
+    $(element).siblings('.inputs').toggle();
+    $(element).siblings('.link-display').toggle();
   }
-})
-
-$('.display-area').on('click', '#link-submit-button', function() {
-  $('.link-display').empty()
-  const folderId = $(this).closest('.name').attr('id')
-  const element = $(this).parent().parent();
-  createLink(folderId, element)
-})
-
-$('.display-area').on('click', '#sort-most-pop', function() {
-  const folderId = $(this).closest('.name').attr('id')
-  const element = $(this).parents('.link-inputs').parents('.inputs');
-  $('.link-display').empty();
-
-  $.get(`/api/v1/folders/${folderId}/links`).then((links) => {
-    if(links.length){
-      const sortedLinks = links.sort(compareClicks).reverse()
-      loopLinks(sortedLinks, folderId, element)
-    } else{
-      const message = $(this).parents('.sort-btn-container').parents('.inputs').siblings('.link-display');
-      message.append(
-        `<p>No links to sort.</p>`
-      )
-    }
-  })
-})
-
-$('.display-area').on('click', '#sort-least-pop', function() {
-  const folderId = $(this).closest('.name').attr('id')
-  const element = $(this).parents('.link-inputs').parents('.inputs');
-  $('.link-display').empty();
-
-  $.get(`/api/v1/folders/${folderId}/links`).then((links) => {
-    if(links.length){
-      const sortedLinks = links.sort(compareClicks)
-      loopLinks(sortedLinks, folderId, element)
-    } else{
-      const message = $(this).parents('.sort-btn-container').parents('.inputs').siblings('.link-display');
-      message.append(
-        `<p>No links to sort.</p>`
-      )
-    }
-  })
-})
-
-const compareClicks = (a,b) => {
-  if (a.clicks < b.clicks)
-    return -1;
-  if (a.clicks > b.clicks)
-    return 1;
-  return 0;
-}
+};
 
 const createFolder = () => {
   const folder = $('#folder-name').val();
@@ -88,27 +44,14 @@ const createFolder = () => {
         contentType: 'application/json',
         data: JSON.stringify({ name: folder }),
         dataType: 'json',
-        success: (response) => {receiveFolders(response)}
-  })
-}
+        success: (response) => {receiveFolders(response);}
+  });
+};
 
-const receiveFolders = () => {
-  fetch('/api/v1/folders')
-    .then(response => response.json())
-    .then(data => {
-      if(data.length){
-        loopFolders(data)
-      }else{
-        $('.display-area').append(`
-        <p>Please enter a name for your folder</p>
-        `)
-      }
-    })
-}
 
 const loopFolders = (folders) => {
-  folders.map(folder => appendFolders(folder))
-}
+  folders.map(folder => appendFolders(folder));
+};
 
 const appendFolders = (folder) => {
   $('.display-area').append(`
@@ -120,38 +63,16 @@ const appendFolders = (folder) => {
       <div class='inputs'></div>
       <div class="link-display"></div>
       </div>
-    `)
-}
-
-const urlValidation = (url) => {
-  const exp = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/gi
-
-  const regex = new RegExp(exp)
-  if(url.match(regex)){
-    return true
-  }
-  $('.error-mess').append(`
-    <p>Please enter a valid URL starting with http:// or https://</p>
-  `)
-}
-
-const checkHttp = (string) => {
-  if (!string.match(/^[a-zA-Z]+:\/\//)){
-      return string = 'https://' + string;
-      console.log(string);
-  } else {
-    return string
-  }
-}
+    `);
+};
 
 const createLink = (id, element) => {
   const folderId = id;
   const title = $(`#${folderId}-url-title`).val();
   const url = $('#url').val();
-  const checkedUrl = checkHttp(url)
+  const checkedUrl = checkHttp(url);
   if(urlValidation(checkedUrl)){
-    console.log('checked', checkedUrl);
-    const shortUrl = shortenLink()
+    const shortUrl = shortenLink();
     $.ajax({
       url: '/api/v1/links',
       type: 'POST',
@@ -159,56 +80,156 @@ const createLink = (id, element) => {
       data: JSON.stringify({ title: title, long_url: checkedUrl, short_url: shortUrl, folders_id: folderId, clicks: 0 }),
       dataType: 'json',
       success: (response) => {
-        receiveLinks(folderId, element)
+        getLinks(folderId, element);
       }
-    })
+    });
   }
-}
+};
 
-const appendLinks = (location, link) => {
-  const element = $(location).siblings('.link-display')
-  element.append(`
-    <div class='link-list'>
-      <p>Title: ${link.title}</p>
-      <p class='clicks'>Clicks: ${link.clicks}</p>
-      <a href=/click/${link.short_url}>${link.short_url}</a>
-      <p>Date Created: ${link.created_at}</p>
-    </div>
-    `)
-}
+const checkHttp = (string) => {
+  if (!string.match(/^[a-zA-Z]+:\/\//)){
+      string = 'https://' + string;
+      return string;
+  } else {
+    return string;
+  }
+};
+
+const urlValidation = (url) => {
+  const exp = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/gi;
+
+  const regex = new RegExp(exp);
+  if(url.match(regex)){
+    $('.error-mess').remove();
+    return true;
+  }
+  $('.error-mess').append(`
+    <p>Please enter a valid URL starting with http:// or https://</p>
+  `);
+};
 
 const shortenLink = () => {
   const urlLength = 6;
-  const alpha = "abcdefghijklmnopqrstuvwxyz0123456789";
-  let text = "";
+  const alpha = 'abcdefghijklmnopqrstuvwxyz0123456789';
+  let text = '';
 
   for (let i = 0; i < urlLength; i++) {
     text += alpha[Math.floor(Math.random() * alpha.length)];
   }
 
   return text;
-}
+};
 
-const receiveLinks = (folderId, element) => {
+const appendLinks = (location, link) => {
+  const element = $(location).siblings('.link-display');
+
+  element.append(`
+    <div class='link-list'>
+      <p class='link-text'>Title: ${link.title}</p>
+      <p class='link-text clicks'>Clicks: ${link.clicks}</p>
+      <a class='link-text' href=/click/${link.short_url}>${link.short_url}</a>
+      <p class="link-text">Date Created: ${new Date(link.created_at).toLocaleString()}</p>
+    </div>
+    `);
+};
+
+
+const getLinks = (folderId, element) => {
   $.get(`/api/v1/folders/${folderId}/links`).then((links) => {
     if(links.length){
-      loopLinks(links, folderId, element)
+      loopLinks(links, folderId, element);
     }else{
       $('.link-display').append(`
         <p></p>
-        `)
+        `);
     }
-  })
-}
+  });
+};
 
 const loopLinks = (links, folderId, element) => {
   links.forEach((link) => {
     if(link.folders_id == folderId) {
-      appendLinks(element, link)
+      appendLinks(element, link);
     } else {
-      const loc = $(element).siblings('.link-display')
+      const loc = $(element).siblings('.link-display');
       loc.append(
-        `<p>No links to display</p>`)
+        `<p>No links to display</p>`);
     }
-  })
-}
+  });
+};
+
+const compareClicks = (a,b) => {
+  if (a.clicks < b.clicks)
+    return -1;
+  if (a.clicks > b.clicks)
+    return 1;
+  return 0;
+};
+
+
+const sortByTheMost = (folderId, element) => {
+  $.get(`/api/v1/folders/${folderId}/links`).then((links) => {
+    if(links.length){
+      const sortedLinks = links.sort(compareClicks).reverse();
+      loopLinks(sortedLinks, folderId, element);
+    } else{
+      const message = $(this).parents('.sort-btn-container').parents('.inputs').siblings('.link-display');
+      message.append(
+        `<p>No links to sort.</p>`
+      );
+    }
+  });
+};
+
+const sortByTheLeast = (folderId, element) => {
+  $.get(`/api/v1/folders/${folderId}/links`).then((links) => {
+    if(links.length){
+      const sortedLinks = links.sort(compareClicks);
+      loopLinks(sortedLinks, folderId, element);
+    } else{
+      const message = $(this).parents('.sort-btn-container').parents('.inputs').siblings('.link-display');
+      message.append(
+        `<p>No links to sort.</p>`
+      );
+    }
+  });
+};
+
+$(document).ready(() => {
+  receiveFolders();
+});
+
+$('#button').on('click', () => {
+  if($('#folder-name').val()){
+    $('.display-area').empty();
+    createFolder();
+  }
+});
+
+$('.display-area').on('click', '.folder-button', function() {
+  const element = this;
+  displayFolderContents(element);
+});
+
+$('.display-area').on('click', '#link-submit-button', function() {
+  $('.link-display').empty();
+  const folderId = $(this).closest('.name').attr('id');
+  const element = $(this).parent().parent();
+  createLink(folderId, element);
+});
+
+$('.display-area').on('click', '#sort-most-pop', function() {
+  const folderId = $(this).closest('.name').attr('id');
+  const element = $(this).parents('.link-inputs').parents('.inputs');
+  $('.link-display').empty();
+
+  sortByTheMost(folderId, element);
+});
+
+$('.display-area').on('click', '#sort-least-pop', function() {
+  const folderId = $(this).closest('.name').attr('id');
+  const element = $(this).parents('.link-inputs').parents('.inputs');
+  $('.link-display').empty();
+
+  sortByTheLeast(folderId, element);
+});
