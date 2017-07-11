@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const queries = require('./queries');
 
+// router.get('/', queries.checkSecure);
 router.get('/api/v1/folders/', queries.getAllFolders);
 router.get('/api/v1/links/', queries.getAllLinks);
 router.get('/api/v1/folders/:id', queries.getFolderById);
