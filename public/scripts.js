@@ -164,8 +164,12 @@ const compareClicks = (a,b) => {
   if (a.clicks > b.clicks)
     return 1;
   return 0;
+<<<<<<< HEAD
 };
 
+=======
+}
+>>>>>>> 53b43bb4fe47efe78f2155659990a9d2339bab1d
 
 const sortByTheMost = (folderId, element) => {
   $.get(`/api/v1/folders/${folderId}/links`).then((links) => {
@@ -194,6 +198,7 @@ const sortByTheLeast = (folderId, element) => {
     }
   });
 };
+<<<<<<< HEAD
 
 $(document).ready(() => {
   receiveFolders();
@@ -233,3 +238,5 @@ $('.display-area').on('click', '#sort-least-pop', function() {
 
   sortByTheLeast(folderId, element);
 });
+=======
+>>>>>>> 53b43bb4fe47efe78f2155659990a9d2339bab1d
