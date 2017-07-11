@@ -1,21 +1,17 @@
 {
-  "short_name": "JetFuel",
-  "name": "JetFuel - Url shortner",
-  "icons": [
-    {
-      "src": "img/logo-48x48.png",
-      "type": "image/png",
-      "sizes": "48x48"
-    }
-  ],
-  "start_url": "index.html?launcher=true",
-  "display": "standalone",
-  "theme_color": "#7ec0ee",
-  "background_color": "#7ec0ee",
-  "related_applications": [
-    {
-      "platform": "play",
-      "id": "com.google.samples.apps.iosched"
-    }
-  ]
+	"short_name": "JetFuel",
+	"name": "JetFuel - Url shortner",
+	"icons": [{
+		"src": "img/logo-48x48.png",
+		"type": "image/png",
+		"sizes": "48x48"
+	}],
+	"start_url": "index.html?launcher=true",
+	"display": "standalone",
+	"theme_color": "#7ec0ee",
+	"background_color": "#7ec0ee",
+	"related_applications": [{
+		"platform": "play",
+		"id": "com.google.samples.apps.iosched"
+	}]
 }
