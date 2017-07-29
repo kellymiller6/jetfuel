@@ -14,44 +14,44 @@ const receiveFolders = () => {
   };
 
   $(document).ready(() => {
-    receiveFolders()
-  })
+    receiveFolders();
+  });
 
 $('#button').on('click', () => {
   if($('#folder-name').val()){
-    $('.display-area').empty()
-    createFolder()
+    $('.display-area').empty();
+    createFolder();
   }
-})
+});
 
 $('.display-area').on('click', '.folder-button', function() {
   const element = this;
-  displayFolderContents(element)
-  $(this).toggleClass('selected')
-})
+  displayFolderContents(element);
+  $(this).toggleClass('selected');
+});
 
 $('.display-area').on('click', '#link-submit-button', function() {
-  $('.link-display').empty()
-  const folderId = $(this).closest('.name').attr('id')
+  $('.link-display').empty();
+  const folderId = $(this).closest('.name').attr('id');
   const element = $(this).parent().parent();
-  createLink(folderId, element)
-})
+  createLink(folderId, element);
+});
 
 $('.display-area').on('click', '#sort-most-pop', function() {
-  const folderId = $(this).closest('.name').attr('id')
+  const folderId = $(this).closest('.name').attr('id');
   const element = $(this).parents('.link-inputs').parents('.inputs');
   $('.link-display').empty();
 
-  sortByTheMost(folderId, element)
-})
+  sortByTheMost(folderId, element);
+});
 
 $('.display-area').on('click', '#sort-least-pop', function() {
-  const folderId = $(this).closest('.name').attr('id')
+  const folderId = $(this).closest('.name').attr('id');
   const element = $(this).parents('.link-inputs').parents('.inputs');
   $('.link-display').empty();
 
-  sortByTheLeast(folderId, element)
-})
+  sortByTheLeast(folderId, element);
+});
 
 const displayFolderContents = (element) => {
   const folderId = $(element).closest('.name').attr('id');
