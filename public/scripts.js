@@ -1,6 +1,21 @@
-$(document).ready(() => {
-  receiveFolders()
-})
+
+const receiveFolders = () => {
+  fetch('/api/v1/folders')
+  .then(response => response.json())
+  .then(data => {
+    if(data.length){
+      loopFolders(data);
+    }else{
+      $('.display-area').append(`
+        <p>Please enter a name for your folder</p>
+        `);
+      }
+    });
+  };
+
+  $(document).ready(() => {
+    receiveFolders()
+  })
 
 $('#button').on('click', () => {
   if($('#folder-name').val()){
@@ -219,54 +234,3 @@ const sortByTheLeast = (folderId, element) => {
     }
   });
 };
-
-$(document).ready(() => {
-  receiveFolders();
-});
-
-$('#button').on('click', () => {
-  if($('#folder-name').val()){
-    $('.display-area').empty();
-    createFolder();
-  }
-});
-
-$('.display-area').on('click', '.folder-button', function() {
-  const element = this;
-  displayFolderContents(element);
-});
-
-$('.display-area').on('click', '#link-submit-button', function() {
-  $('.link-display').empty();
-  const folderId = $(this).closest('.name').attr('id');
-  const element = $(this).parent().parent();
-  createLink(folderId, element);
-});
-
-$('.display-area').on('click', '#sort-most-pop', function() {
-  const folderId = $(this).closest('.name').attr('id');
-  const element = $(this).parents('.link-inputs').parents('.inputs');
-  $('.link-display').empty();
-
-  sortByTheMost(folderId, element);
-});
-
-$('.display-area').on('click', '#sort-least-pop', function() {
-  const folderId = $(this).closest('.name').attr('id');
-  const element = $(this).parents('.link-inputs').parents('.inputs');
-  $('.link-display').empty();
-
-  sortByTheLeast(folderId, element);
-});
-
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () =>{
-    navigator.serviceWorker.register('./service-worker.js')
-      .then(registration => {
-        console.log('reg', registration);
-      })
-      .catch(error => {
-        console.log('Failure');
-      });
-  });
-}
