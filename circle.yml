@@ -13,3 +13,7 @@ deployment:
     heroku:
       appname: fathomless-hamlet-87357
 
+test:
+  override:
+    - ./node_modules/.bin/mocha
+    - npm run lint
