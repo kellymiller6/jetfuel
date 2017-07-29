@@ -11,5 +11,9 @@ deployment:
   production:
     branch: master
     heroku:
-      appname: fathomless-hamlet-87357
+      appname: glacial-sierra-63440
 
+test:
+  override:
+    - ./node_modules/.bin/mocha
+    - npm run lint
