@@ -12,6 +12,7 @@ $('#button').on('click', () => {
 $('.display-area').on('click', '.folder-button', function() {
   const element = this;
   displayFolderContents(element)
+  $(this).toggleClass('selected')
 })
 
 $('.display-area').on('click', '#link-submit-button', function() {
@@ -48,9 +49,9 @@ const displayFolderContents = (element) => {
         <input id="${folderId}-url-title" type="text" placeholder="enter url title">
         <input id="url" type="text" placeholder="enter url">
         <input id="link-submit-button" type="submit" value='Submit'>
-        <div class='sort-btn-container'>
-          <input class='sort-btn' id="sort-most-pop" type="submit" value='Sort By Most Popular'>
-          <input class='sort-btn' id="sort-least-pop" type="submit" value='Sort By Least Popular'>
+        <div class='sort-btn-container'> <span>Sort By Popularity:</span>
+          <input class='sort-btn' id="sort-most-pop" type="submit" value='Most'>
+          <input class='sort-btn' id="sort-least-pop" type="submit" value='Least'>
         </div>
       </div>
     `)
@@ -162,8 +163,8 @@ const appendLinks = (location, link) => {
 
   element.append(`
     <div class='link-list'>
-      <p class='link-text'>Title: ${link.title}</p>
-      <p class='link-text clicks'>Clicks: ${link.clicks}</p>
+      <div class='top-line'><p class='link-text'>Title: ${link.title}</p>
+      <p class='link-text clicks'>Clicks: ${link.clicks}</p></div>
       <a class='link-text' href=/click/${link.short_url}>${link.short_url}</a>
       <p class="link-text">Date Created: ${new Date(link.created_at).toLocaleString()}</p>
     </div>
